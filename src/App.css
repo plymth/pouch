@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap');
 
 body {
-  background-color: #ffffff;
+  background-color: #f3f3f3;
   font-family: 'Open Sans', sans-serif;
   color: #2d3436;
 }
@@ -21,13 +21,13 @@ body {
   justify-content: right;
 }
 
-.App_wallet-identicon {
-  border: 1px solid #C9C9C9;
+.App__wallet-identicon {
+  border: 2px solid #00b894;
   border-radius: 30px;
   margin-right: 10px;
 }
 
-.App__header{
+.App__header {
   font-size: 60px;
   text-transform: lowercase;
   text-align: center;
@@ -35,33 +35,45 @@ body {
   margin-bottom: 70px;
 }
 
-.App_asset {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0 20px 0;
-  margin-bottom: 20px;
-  font-size: 16px;
-  border-bottom: 1px solid #dfe6e9;
+.App__asset-wrapper {
   width: 800px;
   margin: auto;
 }
 
-.App_asset-identicon {
+.App__asset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  width: 800px;
+}
+
+.App__asset-identicon {
+  margin-right: 10px;
+  border: 2px solid #00b894;
+  border-radius: 30px;
   margin-right: 10px;
 }
 
-.App_asset-symbol {
+.App__asset-symbol {
   margin-right: 30px;
-  font-weight: 500;
+  font-weight: 700;
+  color: #636e72;
 }
 
-.App_asset-address {
+.App__asset-address {
   margin-right: 10px;
   text-align: left;
   flex-grow: 4;
+  color: #b2bec3;
 }
 
-.App_asset-amount {
+.App__asset-amount {
   font-weight: 700;
+  color: #2d3436;
 }

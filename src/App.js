@@ -35,7 +35,7 @@ export const App = () => {
             <Identicon
               string={accountAddress}
               size={30}
-              className="App_wallet-identicon"
+              className="App__wallet-identicon"
             />
           </div>
           <div>{accountAddress ?? accountAddress}</div>
@@ -45,20 +45,20 @@ export const App = () => {
       <div className="App__header">pouch.</div>
       {loading && <div className="App__loader">Loading assets...</div>}
 
-      {resources.map((resource) => (
-        <div className="App_asset">
-          <div className="App_asset-identicon">
+      <div className="App__asset-wrapper">
+        {resources.map((resource) => (
+          <div className="App__asset">
             <Identicon
               string={resource.resourceAddress}
               size={30}
-              className="App_wallet-identicon"
+              className="App__asset-identicon"
             />
+            <div className="App__asset-symbol">{resource.symbol}</div>
+            <div className="App__asset-address">{resource.resourceAddress}</div>
+            <div className="App__asset-amount">{resource.amount}</div>
           </div>
-          <div className="App_asset-symbol">{resource.symbol}</div>
-          <div className="App_asset-address">{resource.resourceAddress}</div>
-          <div className="App_asset-amount">{resource.amount}</div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
