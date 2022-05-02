@@ -29,12 +29,18 @@ export const App = () => {
     setAmount(event.target.value);
   };
 
-  const send = () => {
+  const send = async () => {
     if (!resourceAddress || !componentAddress || !amount) {
       return;
     }
 
-    console.log('good to go...');
+    const manifest = new ManifestBuilder()
+      .withdrawFromAccountByAmount(accountAddress, amount, resourceAddress)
+      .callMethodWithAllResources(componentAddress, 'deposit_batch')
+      .build()
+      .toString();
+    const receipt = await signTransaction(manifest);
+    console.log(receipt.transactionHash);
   };
 
   useEffect(() => {
@@ -44,7 +50,7 @@ export const App = () => {
         const api = new DefaultApi();
         const accountAddress = await getAccountAddress();
 
-        setAccountAddress(formatResourceAddress(accountAddress));
+        setAccountAddress(accountAddress);
 
         const component = await api.getComponent({ address: accountAddress });
         setResources(component.ownedResources);
@@ -55,7 +61,7 @@ export const App = () => {
 
   return (
     <div className="App">
-      {!loading && (
+      {!loading && accountAddress && (
         <div className="App__wallet-address">
           <div>
             <Identicon
@@ -64,7 +70,7 @@ export const App = () => {
               className="App__wallet-identicon"
             />
           </div>
-          <div>{accountAddress ?? accountAddress}</div>
+          <div>{formatResourceAddress(accountAddress)}</div>
         </div>
       )}
 
