@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DefaultApi, ManifestBuilder } from 'pte-sdk';
 import { getAccountAddress, signTransaction } from 'pte-browser-extension-sdk';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Identicon from 'react-identicons';
 import './App.css';
 
@@ -62,16 +63,19 @@ export const App = () => {
   return (
     <div className="App">
       {!loading && accountAddress && (
-        <div className="App__wallet-address">
-          <div>
-            <Identicon
-              string={accountAddress}
-              size={30}
-              className="App__wallet-identicon"
-            />
+        <CopyToClipboard text={accountAddress}>
+          <div className="App__wallet-address">
+            <div>
+              <Identicon
+                string={accountAddress}
+                size={30}
+                className="App__wallet-identicon"
+              />
+            </div>
+
+            <div>{formatResourceAddress(accountAddress)}</div>
           </div>
-          <div>{formatResourceAddress(accountAddress)}</div>
-        </div>
+        </CopyToClipboard>
       )}
 
       <div className="App__header">pouch.</div>

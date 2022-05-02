@@ -10,6 +10,7 @@
     "pte-manifest-compiler": "^0.1.20",
     "pte-sdk": "^0.1.20",
     "react": "^18.1.0",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.1.0",
     "react-identicons": "^1.2.5",
     "react-scripts": "5.0.1",

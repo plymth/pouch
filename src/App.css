@@ -19,6 +19,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: right;
+  cursor: pointer;
 }
 
 .App__wallet-identicon {
