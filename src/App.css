@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap');
+
+body {
+  background-color: #ffffff;
+  font-family: 'Open Sans', sans-serif;
+  color: #2d3436;
+}
+
+.App {
+  width: 1440px;
+  margin: 4% auto;
+}
+
+.App__loader {
+  text-align: center;
+}
+
+.App__wallet-address {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.App_wallet-identicon {
+  border: 1px solid #C9C9C9;
+  border-radius: 30px;
+  margin-right: 10px;
+}
+
+.App__header{
+  font-size: 60px;
+  text-transform: lowercase;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 70px;
+}
+
+.App_asset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 20px 0;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border-bottom: 1px solid #dfe6e9;
+  width: 800px;
+  margin: auto;
+}
+
+.App_asset-identicon {
+  margin-right: 10px;
+}
+
+.App_asset-symbol {
+  margin-right: 30px;
+  font-weight: 500;
+}
+
+.App_asset-address {
+  margin-right: 10px;
+  text-align: left;
+  flex-grow: 4;
+}
+
+.App_asset-amount {
+  font-weight: 700;
+}
