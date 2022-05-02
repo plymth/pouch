@@ -9,6 +9,34 @@ export const App = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [resourceAddress, setResourceAddress] = useState('');
+  const [componentAddress, setComponentAddress] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const formatResourceAddress = (resourceAddress) => {
+    return `${resourceAddress.slice(0, 5)}...${resourceAddress.slice(-4)}`;
+  };
+
+  const handleResourceAddressChange = (event) => {
+    setResourceAddress(event.target.value);
+  };
+
+  const handleComponentAddressChange = (event) => {
+    setComponentAddress(event.target.value);
+  };
+
+  const handleAmountChange = (event) => {
+    setAmount(event.target.value);
+  };
+
+  const send = () => {
+    if (!resourceAddress || !componentAddress || !amount) {
+      return;
+    }
+
+    console.log('good to go...');
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(true);
@@ -16,9 +44,7 @@ export const App = () => {
         const api = new DefaultApi();
         const accountAddress = await getAccountAddress();
 
-        setAccountAddress(
-          `${accountAddress.slice(0, 5)}...${accountAddress.slice(-4)}`
-        );
+        setAccountAddress(formatResourceAddress(accountAddress));
 
         const component = await api.getComponent({ address: accountAddress });
         setResources(component.ownedResources);
@@ -45,16 +71,55 @@ export const App = () => {
       <div className="App__header">pouch.</div>
       {loading && <div className="App__loader">Loading assets...</div>}
 
+      {!loading && (
+        <div className="App__payment">
+          <div className="App__amount-input">
+            <input
+              type="text"
+              placeholder="Component Address"
+              value={componentAddress}
+              onChange={handleComponentAddressChange}
+            />
+          </div>
+          <div className="App__amount-input">
+            <input
+              type="text"
+              placeholder="Resource Address"
+              value={resourceAddress}
+              onChange={handleResourceAddressChange}
+            />
+          </div>
+          <div className="App__amount-input">
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={handleAmountChange}
+            />
+          </div>
+          <button className="App__send-btn" onClick={() => send()}>
+            Send
+          </button>
+        </div>
+      )}
+
       <div className="App__asset-wrapper">
+        {!loading && <div className="App__label">Assets</div>}
         {resources.map((resource) => (
-          <div className="App__asset">
+          <div
+            className="App__asset"
+            onClick={() => setResourceAddress(resource.resourceAddress)}
+            key={resource.resourceAddress}
+          >
             <Identicon
               string={resource.resourceAddress}
               size={30}
               className="App__asset-identicon"
             />
             <div className="App__asset-symbol">{resource.symbol}</div>
-            <div className="App__asset-address">{resource.resourceAddress}</div>
+            <div className="App__asset-address">
+              {formatResourceAddress(resource.resourceAddress)}
+            </div>
             <div className="App__asset-amount">{resource.amount}</div>
           </div>
         ))}

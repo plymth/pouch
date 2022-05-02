@@ -32,16 +32,17 @@ body {
   text-transform: lowercase;
   text-align: center;
   font-weight: 600;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 
 .App__asset-wrapper {
-  width: 800px;
   margin: auto;
+  width: 400px;
 }
 
 .App__asset {
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -50,7 +51,6 @@ body {
   font-size: 16px;
   background-color: #ffffff;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  width: 800px;
 }
 
 .App__asset-identicon {
@@ -70,10 +70,56 @@ body {
   margin-right: 10px;
   text-align: left;
   flex-grow: 4;
-  color: #b2bec3;
+  color: #636e72;
 }
 
 .App__asset-amount {
   font-weight: 700;
   color: #2d3436;
+}
+
+.App__payment {
+  margin: auto;
+}
+
+.App__payment {
+  width: 400px;
+  margin: auto auto 50px auto;
+}
+
+.App__amount-input {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.App__amount-input input {
+  display: block;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: none;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+}
+
+.App__label {
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.App__send-btn {
+  display: block;
+  width: 100%;
+  padding: 15px 0 15px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: #0984e3;
+  border: none;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
 }
