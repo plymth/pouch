@@ -3,6 +3,7 @@ import { DefaultApi, ManifestBuilder } from 'pte-sdk';
 import { getAccountAddress, signTransaction } from 'pte-browser-extension-sdk';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Identicon from 'react-identicons';
+import Noty from 'noty';
 import './App.css';
 
 export const App = () => {
@@ -30,6 +31,12 @@ export const App = () => {
     setAmount(event.target.value);
   };
 
+  const clearForm = () => {
+    setComponentAddress('');
+    setResourceAddress('');
+    setAmount('');
+  };
+
   const send = async () => {
     if (!resourceAddress || !componentAddress || !amount) {
       return;
@@ -42,28 +49,46 @@ export const App = () => {
       .toString();
     const receipt = await signTransaction(manifest);
     console.log(receipt.transactionHash);
+
+    clearForm();
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const api = new DefaultApi();
+    const accountAddress = await getAccountAddress();
+
+    setAccountAddress(accountAddress);
+
+    const component = await api.getComponent({ address: accountAddress });
+    setResources(component.ownedResources);
+    setLoading(false);
+  };
+
+  const notify = (message) => {
+    new Noty({
+      theme: 'nest',
+      type: 'success',
+      progressBar: true,
+      timeout: 1000,
+      text: message,
+    }).show();
   };
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(true);
-      (async () => {
-        const api = new DefaultApi();
-        const accountAddress = await getAccountAddress();
-
-        setAccountAddress(accountAddress);
-
-        const component = await api.getComponent({ address: accountAddress });
-        setResources(component.ownedResources);
-        setLoading(false);
-      })();
+      fetchData();
     }, 100);
   }, []);
 
   return (
     <div className="App">
       {!loading && accountAddress && (
-        <CopyToClipboard text={accountAddress}>
+        <CopyToClipboard
+          text={accountAddress}
+          onCopy={() => notify('Copied account address!')}
+        >
           <div className="App__wallet-address">
             <div>
               <Identicon
@@ -127,9 +152,15 @@ export const App = () => {
               className="App__asset-identicon"
             />
             <div className="App__asset-symbol">{resource.symbol}</div>
-            <div className="App__asset-address">
-              {formatResourceAddress(resource.resourceAddress)}
-            </div>
+
+            <CopyToClipboard
+              text={resource.resourceAddress}
+              onCopy={() => notify('Copied resource address!')}
+            >
+              <div className="App__asset-address">
+                {formatResourceAddress(resource.resourceAddress)}
+              </div>
+            </CopyToClipboard>
             <div className="App__asset-amount">{resource.amount}</div>
           </div>
         ))}
