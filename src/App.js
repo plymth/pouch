@@ -4,6 +4,10 @@ import { getAccountAddress, signTransaction } from 'pte-browser-extension-sdk';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Identicon from 'react-identicons';
 import Noty from 'noty';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import Assets from './Assets';
+import Send from './Send';
+import Mint from './Mint';
 import './App.css';
 
 export const App = () => {
@@ -85,86 +89,72 @@ export const App = () => {
   return (
     <div className="App">
       {!loading && accountAddress && (
-        <CopyToClipboard
-          text={accountAddress}
-          onCopy={() => notify('Copied account address!')}
-        >
-          <div className="App__wallet-address">
-            <div>
-              <Identicon
-                string={accountAddress}
-                size={30}
-                className="App__wallet-identicon"
-              />
+        <div className="App__wallet-address">
+          <div className="App__menu">
+            <div className="App__menu-item">
+              <Link to="/">Assets</Link>
             </div>
+            <div className="App__menu-item">
+              <Link to="/send">Send</Link>
+            </div>
+            <div className="App__menu-item">
+              <Link to="/mint">Mint</Link>
+            </div>
+          </div>
 
-            <div>{formatResourceAddress(accountAddress)}</div>
-          </div>
-        </CopyToClipboard>
-      )}
-
-      <div className="App__header">pouch.</div>
-      {loading && <div className="App__loader">Loading assets...</div>}
-
-      {!loading && (
-        <div className="App__payment">
-          <div className="App__amount-input">
-            <input
-              type="text"
-              placeholder="Component Address"
-              value={componentAddress}
-              onChange={handleComponentAddressChange}
-            />
-          </div>
-          <div className="App__amount-input">
-            <input
-              type="text"
-              placeholder="Resource Address"
-              value={resourceAddress}
-              onChange={handleResourceAddressChange}
-            />
-          </div>
-          <div className="App__amount-input">
-            <input
-              type="number"
-              placeholder="Amount"
-              value={amount}
-              onChange={handleAmountChange}
-            />
-          </div>
-          <button className="App__send-btn" onClick={() => send()}>
-            Send
-          </button>
+          <CopyToClipboard
+            text={accountAddress}
+            onCopy={() => notify('Copied account address!')}
+          >
+            <div className="App__wallet-address-wrapper">
+              <div>
+                <Identicon
+                  string={accountAddress}
+                  size={30}
+                  className="App__wallet-identicon"
+                />
+              </div>
+              <div>{formatResourceAddress(accountAddress)}</div>
+            </div>
+          </CopyToClipboard>
         </div>
       )}
 
-      <div className="App__asset-wrapper">
-        {!loading && <div className="App__label">Assets</div>}
-        {resources.map((resource) => (
-          <div
-            className="App__asset"
-            onClick={() => setResourceAddress(resource.resourceAddress)}
-            key={resource.resourceAddress}
-          >
-            <Identicon
-              string={resource.resourceAddress}
-              size={30}
-              className="App__asset-identicon"
-            />
-            <div className="App__asset-symbol">{resource.symbol}</div>
-
-            <CopyToClipboard
-              text={resource.resourceAddress}
-              onCopy={() => notify('Copied resource address!')}
-            >
-              <div className="App__asset-address">
-                {formatResourceAddress(resource.resourceAddress)}
-              </div>
-            </CopyToClipboard>
-            <div className="App__asset-amount">{resource.amount}</div>
-          </div>
-        ))}
+      <div className="App__header">
+        <Link to="/">pouch.</Link>
       </div>
+      {loading && <div className="App__loader">Loading assets...</div>}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Assets
+              resources={resources}
+              loading={loading}
+              notify={notify}
+              setResourceAddress={setResourceAddress}
+              formatResourceAddress={formatResourceAddress}
+            />
+          }
+        />
+        <Route path="/mint" element={<Mint />} />
+        <Route
+          path="/send"
+          element={
+            <Send
+              componentAddress={componentAddress}
+              resourceAddress={resourceAddress}
+              amount={amount}
+              handleResourceAddressChange={handleResourceAddressChange}
+              handleComponentAddressChange={handleComponentAddressChange}
+              handleAmountChange={handleAmountChange}
+              loading={loading}
+              send={send}
+            />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   );
 };
