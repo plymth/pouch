@@ -9,6 +9,7 @@ import Assets from './Assets';
 import Send from './Send';
 import Mint from './Mint';
 import About from './About';
+import Nfts from './Nfts';
 import './App.css';
 
 export const App = () => {
@@ -151,6 +152,9 @@ export const App = () => {
             <Link to="/mint">Mint</Link>
           </div>
           <div className="App__menu-item">
+            <Link to="/nfts">NFTs</Link>
+          </div>
+          <div className="App__menu-item">
             <Link to="/about">About</Link>
           </div>
         </div>
@@ -205,6 +209,7 @@ export const App = () => {
           }
         />
         <Route path="/about" element={<About />} />
+        <Route path="/nfts" element={<Nfts />} />
         <Route
           path="/send"
           element={
