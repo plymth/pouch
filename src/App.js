@@ -181,7 +181,7 @@ export const App = () => {
       </div>
 
       <div className="App__title">
-        <Link to="/">pouch.</Link>
+        <Link to="/">pouch</Link>
       </div>
       {loading && <div className="App__loader">Loading assets...</div>}
       <Routes>
