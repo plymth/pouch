@@ -13,6 +13,28 @@ body {
   margin: 4% auto;
 }
 
+.App__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.App__menu {
+  display: flex;
+  align-items: center;
+  margin-right: 100px;
+}
+
+.App__menu-item {
+  margin-right: 30px;
+}
+
+.App__menu-item a {
+  font-weight: 500;
+  color: #636e72;
+  text-decoration: none;
+}
+
 .App__mint {
   text-align: center;
 }
@@ -34,21 +56,9 @@ body {
   justify-content: right;
 }
 
-.App__menu {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  margin-right: 100px;
-}
-
-.App__menu-item {
+.App__network {
   margin-right: 20px;
-}
-
-.App__menu-item a {
-  font-weight: 700;
-  color: #636e72;
-  text-decoration: none;
+  color: #0984e3;
 }
 
 .App__wallet-identicon {
@@ -57,7 +67,7 @@ body {
   margin-right: 10px;
 }
 
-.App__header {
+.App__title {
   font-size: 60px;
   text-transform: lowercase;
   text-align: center;
@@ -65,7 +75,7 @@ body {
   margin-bottom: 50px;
 }
 
-.App__header a {
+.App__title a {
   text-decoration: none;
   color: #2d3436;
   cursor: pointer;
@@ -114,13 +124,32 @@ body {
   color: #2d3436;
 }
 
-.App__payment {
-  margin: auto;
-}
-
-.App__payment {
+.App__send {
   width: 400px;
   margin: auto auto 50px auto;
+}
+
+.App__page {
+  width: 400px;
+  margin: auto auto 50px auto;
+}
+
+.App__input {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.App__input input {
+  display: block;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: none;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
 }
 
 .App__amount-input {

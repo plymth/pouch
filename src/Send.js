@@ -1,3 +1,6 @@
+import Input from './Input';
+import Button from './Button';
+
 export const Send = ({
   componentAddress,
   resourceAddress,
@@ -11,34 +14,26 @@ export const Send = ({
   return (
     <div>
       {!loading && (
-        <div className="App__payment">
-          <div className="App__amount-input">
-            <input
-              type="text"
-              placeholder="Component Address"
-              value={componentAddress}
-              onChange={handleComponentAddressChange}
-            />
-          </div>
-          <div className="App__amount-input">
-            <input
-              type="text"
-              placeholder="Resource Address"
-              value={resourceAddress}
-              onChange={handleResourceAddressChange}
-            />
-          </div>
-          <div className="App__amount-input">
-            <input
-              type="number"
-              placeholder="Amount"
-              value={amount}
-              onChange={handleAmountChange}
-            />
-          </div>
-          <button className="App__send-btn" onClick={() => send()}>
-            Send
-          </button>
+        <div className="App__send">
+          <Input
+            type="text"
+            placeholder="Component Address"
+            value={componentAddress}
+            onChange={handleComponentAddressChange}
+          />
+          <Input
+            type="text"
+            placeholder="Resource Address"
+            value={resourceAddress}
+            onChange={handleResourceAddressChange}
+          />
+          <Input
+            type="number"
+            placeholder="Amount"
+            value={amount}
+            onChange={handleAmountChange}
+          />
+          <Button handleOnClick={send} title="Send" />
         </div>
       )}
     </div>

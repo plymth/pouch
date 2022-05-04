@@ -25,7 +25,7 @@ export const Assets = ({
 
           <CopyToClipboard
             text={resource.resourceAddress}
-            onCopy={() => notify('Copied resource address!')}
+            onCopy={() => notify('Copied resource address!', 'success')}
           >
             <div className="App__asset-address">
               {formatResourceAddress(resource.resourceAddress)}
