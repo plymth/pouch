@@ -7,33 +7,35 @@ export const Assets = ({
   setResourceAddress,
   formatResourceAddress,
   notify,
+  loading,
 }) => {
   return (
     <div className="App__asset-wrapper">
-      {resources.map((resource) => (
-        <div
-          className="App__asset"
-          onClick={() => setResourceAddress(resource.resourceAddress)}
-          key={resource.resourceAddress}
-        >
-          <Identicon
-            string={resource.resourceAddress}
-            size={30}
-            className="App__asset-identicon"
-          />
-          <div className="App__asset-symbol">{resource.symbol}</div>
-
-          <CopyToClipboard
-            text={resource.resourceAddress}
-            onCopy={() => notify('Copied resource address!', 'success')}
+      {!loading &&
+        resources.map((resource) => (
+          <div
+            className="App__asset"
+            onClick={() => setResourceAddress(resource.resource_address)}
+            key={resource.resource_address}
           >
-            <div className="App__asset-address">
-              {formatResourceAddress(resource.resourceAddress)}
-            </div>
-          </CopyToClipboard>
-          <div className="App__asset-amount">{resource.amount}</div>
-        </div>
-      ))}
+            <Identicon
+              string={resource.resource_address}
+              size={30}
+              className="App__asset-identicon"
+            />
+            <div className="App__asset-symbol">{resource.symbol}</div>
+
+            <CopyToClipboard
+              text={resource.resource_address}
+              onCopy={() => notify('Copied resource address!', 'success')}
+            >
+              <div className="App__asset-address">
+                {formatResourceAddress(resource.resource_address)}
+              </div>
+            </CopyToClipboard>
+            <div className="App__asset-amount">{resource.amount}</div>
+          </div>
+        ))}
     </div>
   );
 };

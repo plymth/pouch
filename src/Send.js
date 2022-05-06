@@ -17,7 +17,7 @@ export const Send = ({
         <div className="App__send">
           <Input
             type="text"
-            placeholder="Component Address"
+            placeholder="Component Address / RNS"
             value={componentAddress}
             onChange={handleComponentAddressChange}
           />
