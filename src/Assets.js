@@ -25,6 +25,10 @@ export const Assets = ({
             />
             <div className="App__asset-symbol">{resource.symbol}</div>
 
+            <div className="App__asset-address">
+                {resource.name}
+              </div>
+
             <CopyToClipboard
               text={resource.resource_address}
               onCopy={() => notify('Copied resource address!', 'success')}
