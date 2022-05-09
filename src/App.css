@@ -190,3 +190,10 @@ body {
   font-weight: 700;
   text-transform: uppercase;
 }
+
+.App__rns {
+  color: #6c5ce7;
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 24px;
+}

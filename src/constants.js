@@ -1,0 +1,17 @@
+export const API_URL = 'https://pte01.radixdlt.com/';
+
+export const POUCH_COMPONENT_ADDRESS =
+  '02f397bfa77a1b7319c2071535579cfa7ecfcb51b3cc1b32212090';
+
+export const RNS_COMPONENT_ADDRESS =
+  '02eee324c349a0b3a059d89ed8fcdc4adea3da0938d3a8560371f3';
+
+export const RNS_RESOURCE_ADDRESS =
+  '036b84783b53dfafc2d0be28d55df2d53ddc439c680bf97309353a';
+
+export const XRD_RESOURCE_ADDRESS =
+  '030000000000000000000000000000000000000000000000000004';
+
+export const DEPOSIT_PER_YEAR = 50;
+export const FEE_ADDRESS_UPDATE = 10;
+export const FEE_RENEWAL_PER_YEAR = 25;

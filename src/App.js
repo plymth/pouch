@@ -4,7 +4,7 @@ import { getAccountAddress, signTransaction } from 'pte-browser-extension-sdk';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Identicon from 'react-identicons';
 import Noty from 'noty';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, Navigate, useParams } from 'react-router-dom';
 import sha256 from 'crypto-js/sha256';
 import Assets from './Assets';
 import Send from './Send';
@@ -12,7 +12,18 @@ import Mint from './Mint';
 import About from './About';
 import Nfts from './Nfts';
 import Rns from './Rns';
+import User from './User';
 import './App.css';
+import {
+  API_URL,
+  RNS_RESOURCE_ADDRESS,
+  RNS_COMPONENT_ADDRESS,
+  POUCH_COMPONENT_ADDRESS,
+  XRD_RESOURCE_ADDRESS,
+  DEPOSIT_PER_YEAR,
+  FEE_ADDRESS_UPDATE,
+  FEE_RENEWAL_PER_YEAR
+} from './constants';
 
 export const App = () => {
   const fixedToken = {
@@ -30,31 +41,12 @@ export const App = () => {
   const [accountAddress, setAccountAddress] = useState();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [resourceAddress, setResourceAddress] = useState('');
   const [componentAddress, setComponentAddress] = useState('');
   const [token, setToken] = useState(fixedToken);
   const [amount, setAmount] = useState('');
   const [rnsParams, setRnsParams] = useState(rns);
   const [rnsName, setRnsName] = useState('');
-
-  const API_URL = 'https://pte01.radixdlt.com/';
-
-  const POUCH_COMPONENT_ADDRESS =
-    '02f397bfa77a1b7319c2071535579cfa7ecfcb51b3cc1b32212090';
-
-  const RNS_COMPONENT_ADDRESS =
-    '02eee324c349a0b3a059d89ed8fcdc4adea3da0938d3a8560371f3';
-
-  const RNS_RESOURCE_ADDRESS =
-    '036b84783b53dfafc2d0be28d55df2d53ddc439c680bf97309353a';
-
-  const XRD_RESOURCE_ADDRESS =
-    '030000000000000000000000000000000000000000000000000004';
-
-  const DEPOSIT_PER_YEAR = 50;
-  const FEE_ADDRESS_UPDATE = 10;
-  const FEE_RENEWAL_PER_YEAR = 25;
 
   const formatResourceAddress = (resourceAddress) => {
     return `${resourceAddress.slice(0, 5)}...${resourceAddress.slice(-4)}`;
@@ -113,12 +105,12 @@ export const App = () => {
         const response = await fetch(
           `${API_URL}non-fungible/${RNS_RESOURCE_ADDRESS}${nonFungibleId}`
         );
+
         const nonFungibleData = await response.json();
         const struct = JSON.parse(nonFungibleData.mutable_data);
-        const fields = struct.fields;
-        const targetComponentAddress = `02${fields[0].bytes}`;
-
-        console.log(targetComponentAddress);
+        const componentAddressField = struct.fields[0];
+        const regex = /ComponentAddress\(\"(\w+)\"\)/g;
+        const targetComponentAddress = [...componentAddressField.value.matchAll(regex)][0][1];
 
         const manifest = new ManifestBuilder()
           .withdrawFromAccountByAmount(accountAddress, amount, resourceAddress)
@@ -140,19 +132,23 @@ export const App = () => {
       }
     }
 
-    const manifest = new ManifestBuilder()
-      .withdrawFromAccountByAmount(accountAddress, amount, resourceAddress)
-      .callMethodWithAllResources(componentAddress, 'deposit_batch')
-      .build()
-      .toString();
+    try {
+      const manifest = new ManifestBuilder()
+        .withdrawFromAccountByAmount(accountAddress, amount, resourceAddress)
+        .callMethodWithAllResources(componentAddress, 'deposit_batch')
+        .build()
+        .toString();
 
-    const receipt = await signTransaction(manifest);
-    console.log(receipt.transactionHash);
+      const receipt = await signTransaction(manifest);
+      console.log(receipt.transactionHash);
 
-    clearSendForm();
-    fetchData();
+      clearSendForm();
+      fetchData();
 
-    notify('Payment successfully sent!', 'success');
+      notify('Payment successfully sent!', 'success');
+    } catch {
+      return notify('Transaction failed.', 'error');
+    }
   };
 
   const mint = async () => {
@@ -165,21 +161,25 @@ export const App = () => {
       return notify('Please complete all mandatory fields.', 'error');
     }
 
-    const manifest = new ManifestBuilder()
-      .callMethod(POUCH_COMPONENT_ADDRESS, 'mint', [
-        `"${token.name}" "${token.symbol}" "${token.description}" Decimal("${token.initial_supply}")`,
-      ])
-      .callMethodWithAllResources(accountAddress, 'deposit_batch')
-      .build()
-      .toString();
+    try {
+      const manifest = new ManifestBuilder()
+        .callMethod(POUCH_COMPONENT_ADDRESS, 'mint', [
+          `"${token.name}" "${token.symbol}" "${token.description}" Decimal("${token.initial_supply}")`,
+        ])
+        .callMethodWithAllResources(accountAddress, 'deposit_batch')
+        .build()
+        .toString();
 
-    const receipt = await signTransaction(manifest);
-    console.log(receipt.transactionHash);
+      const receipt = await signTransaction(manifest);
+      console.log(receipt.transactionHash);
 
-    clearMintForm();
-    fetchData();
+      clearMintForm();
+      fetchData();
 
-    notify('Token successfully minted!', 'success');
+      notify('Token successfully minted!', 'success');
+    } catch {
+      return notify('Failed minting token', 'error');
+    }
   };
 
   const registerRns = async () => {
@@ -193,53 +193,65 @@ export const App = () => {
       );
     }
 
-    const amount = DEPOSIT_PER_YEAR * rnsParams.reserve_years;
+    try {
+      const amount = DEPOSIT_PER_YEAR * rnsParams.reserve_years;
 
-    const manifest = new ManifestBuilder()
-      .withdrawFromAccountByAmount(accountAddress, amount, XRD_RESOURCE_ADDRESS)
-      .takeFromWorktop(XRD_RESOURCE_ADDRESS, 'xrd')
-      .callMethod(RNS_COMPONENT_ADDRESS, 'register_name', [
-        `"${rnsParams.name}" ComponentAddress("${accountAddress}") ${rnsParams.reserve_years}u8 Bucket("xrd")`,
-      ])
-      .callMethodWithAllResources(accountAddress, 'deposit_batch')
-      .build()
-      .toString();
+      const manifest = new ManifestBuilder()
+        .withdrawFromAccountByAmount(
+          accountAddress,
+          amount,
+          XRD_RESOURCE_ADDRESS
+        )
+        .takeFromWorktop(XRD_RESOURCE_ADDRESS, 'xrd')
+        .callMethod(RNS_COMPONENT_ADDRESS, 'register_name', [
+          `"${rnsParams.name}" ComponentAddress("${accountAddress}") ${rnsParams.reserve_years}u8 Bucket("xrd")`,
+        ])
+        .callMethodWithAllResources(accountAddress, 'deposit_batch')
+        .build()
+        .toString();
 
-    console.log(manifest);
+      console.log(manifest);
 
-    const receipt = await signTransaction(manifest);
-    console.log(receipt.transactionHash);
+      const receipt = await signTransaction(manifest);
+      console.log(receipt.transactionHash);
 
-    clearRnsForm();
-    fetchData();
+      clearRnsForm();
+      fetchData();
 
-    notify('RNS registration successful', 'success');
+      notify('RNS registration successful', 'success');
+    } catch {
+      return notify('Failed to register RNS', 'error');
+    }
   };
 
   const fetchData = async () => {
-    const accountAddress = await getAccountAddress();
+    try {
+      const accountAddress = await getAccountAddress();
 
-    setAccountAddress(accountAddress);
+      setAccountAddress(accountAddress);
 
-    const response = await fetch(`${API_URL}component/${accountAddress}`);
-    const component = await response.json();
+      const response = await fetch(`${API_URL}component/${accountAddress}`);
+      const component = await response.json();
 
-    setResources(component.owned_resources);
+      setResources(component.owned_resources);
 
-    const rnsResource = component.owned_resources.find(
-      (resource) => resource.resource_address === RNS_RESOURCE_ADDRESS
-    );
-
-    if (rnsResource) {
-      const nonFungibleId = rnsResource.non_fungible_ids[0];
-      const response = await fetch(
-        `${API_URL}non-fungible/${RNS_RESOURCE_ADDRESS}${nonFungibleId}`
+      const rnsResource = component.owned_resources.find(
+        (resource) => resource.resource_address === RNS_RESOURCE_ADDRESS
       );
-      const nonFungibleData = await response.json();
-      const struct = JSON.parse(nonFungibleData.mutable_data);
-      const fields = struct.fields;
-      const rns = fields.find((f) => f.type == 'String').value;
-      setRnsName(rns);
+
+      if (rnsResource) {
+        const nonFungibleId = rnsResource.non_fungible_ids[0];
+        const response = await fetch(
+          `${API_URL}non-fungible/${RNS_RESOURCE_ADDRESS}${nonFungibleId}`
+        );
+        const nonFungibleData = await response.json();
+        const struct = JSON.parse(nonFungibleData.mutable_data);
+        const fields = struct.fields;
+        const rns = fields.find((f) => f.type == 'String').value;
+        setRnsName(rns);
+      }
+    } catch {
+      notify('Something went wrong', 'error');
     }
 
     setLoading(false);
@@ -368,6 +380,18 @@ export const App = () => {
               handleAmountChange={handleAmountChange}
               loading={loading}
               send={send}
+            />
+          }
+        />
+        <Route
+          path="/users/:userRns"
+          element={
+            <User
+              loading={loading}
+              notify={notify}
+              setResourceAddress={setResourceAddress}
+              formatResourceAddress={formatResourceAddress}
+              hashRns={hashRns}
             />
           }
         />
