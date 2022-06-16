@@ -37,7 +37,7 @@ export const Assets = ({
                 {formatResourceAddress(resource.resource_address)}
               </div>
             </CopyToClipboard>
-            <div className="App__asset-amount">{resource.amount}</div>
+            <div className="App__asset-amount">{Number(resource.amount).toLocaleString()}</div>
           </div>
         ))}
     </div>
